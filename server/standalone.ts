@@ -1,20 +1,20 @@
 import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
-import { dirname, join, resolve } from 'node:path';
+import { dirname, join } from 'node:path';
 import { getAsset, getAssetKeys } from 'node:sea';
-import { loadEnvFile } from 'node:process';
 import { execFile } from 'node:child_process';
 import { persistentGame } from './game.js';
 import { createGameServer } from './app.js';
 import { localPeerChecker, localUrls } from './network.js';
+import { readConfiguration } from './config.js';
 
 declare const BEANGO_ASSET_VERSION: string;
 
 async function main() {
   const directory = dirname(process.execPath);
   process.chdir(directory);
-  if (existsSync(join(directory, '.env'))) loadEnvFile(join(directory, '.env'));
-  const port = Number(process.env.PORT || 4321);
-  if (!Number.isInteger(port) || port < 1 || port > 65535) throw new Error('PORT должен быть числом от 1 до 65535.');
+  const config = readConfiguration(directory);
+  const { port } = config;
+  console.log(config.loaded ? `Конфигурация: ${config.envPath}` : `Файл ${config.envPath} не найден. Используется порт ${port}.`);
   const url = `http://localhost:${port}`;
   const open = () => {
     if (!process.argv.includes('--no-open')) execFile('rundll32.exe', ['url.dll,FileProtocolHandler', url], { windowsHide: true }, () => {});
@@ -36,19 +36,18 @@ async function main() {
     writeFileSync(join(clientDirectory, '.ready'), BEANGO_ASSET_VERSION);
   }
   const server = createGameServer({
-    store: persistentGame(resolve(process.env.DATA_DIR || 'data')), clientDirectory, port,
-    publicUrl: process.env.PUBLIC_URL,
-    allowedHosts: (process.env.ALLOWED_HOSTS || '').split(',').map((value) => value.trim().toLowerCase()).filter(Boolean),
-    isLocalPeer: localPeerChecker((process.env.TRUSTED_LAN_CIDRS || '').split(',').map((value) => value.trim()).filter(Boolean)),
+    store: persistentGame(config.dataDirectory), clientDirectory, port,
+    publicUrl: config.publicUrl, allowedHosts: config.allowedHosts,
+    isLocalPeer: localPeerChecker(config.trustedLanCidrs),
   });
   server.http.on('error', (error: NodeJS.ErrnoException) => {
     console.error(error.code === 'EADDRINUSE' ? `Порт ${port} занят другой программой. Измените PORT в .env.` : error.message);
     process.exitCode = 1;
   });
-  server.http.listen(port, process.env.HOST || '0.0.0.0', () => {
+  server.http.listen(port, config.host, () => {
     console.log(`\n  BEANGO — Стикер пати\n\n  На этом компьютере: ${url}`);
     for (const address of localUrls(port)) console.log(`  В локальной сети:   ${address}`);
-    if (process.env.PUBLIC_URL) console.log(`  Для гостей:         ${process.env.PUBLIC_URL}`);
+    if (config.publicUrl) console.log(`  Для гостей:         ${config.publicUrl}`);
     else console.log('  Для доступа из интернета запустите Enable Internet.cmd, затем перезапустите Beango.');
     console.log('\n  Для остановки закройте это окно или нажмите Ctrl+C.\n'); open();
   });

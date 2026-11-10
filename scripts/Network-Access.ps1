@@ -12,10 +12,10 @@ $bingoData = Join-Path $bingoRoot 'data'
 $bingoReport = Join-Path $bingoData 'network-access.json'
 $bingoEnvironment = Join-Path $bingoRoot '.env'
 if ($Port -eq 0) {
-    $Port = 4321
+    $Port = 54321
     if (Test-Path -LiteralPath $bingoEnvironment) {
         foreach ($bingoLine in Get-Content -LiteralPath $bingoEnvironment) {
-            if ($bingoLine -match '^PORT=(\d+)$') { $Port = [int]$Matches[1] }
+            if ($bingoLine -match '^\s*(?:export\s+)?PORT\s*=\s*["'']?(\d+)["'']?\s*(?:#.*)?$') { $Port = [int]$Matches[1] }
         }
     }
 }

@@ -7,6 +7,7 @@ import { WebSocket, WebSocketServer } from 'ws';
 import { asRecord, GameError, GameStore, type Mutation } from './game.js';
 import { localPeerChecker, localUrls, validOrigin, validRequestHost } from './network.js';
 import type { ServerMessage } from '../shared/types.js';
+import { DEFAULT_PORT } from './config.js';
 
 interface Options {
   store: GameStore; clientDirectory?: string; port?: number; publicUrl?: string;
@@ -103,7 +104,7 @@ export function createGameServer(options: Options) {
   app.get('/api/network', (request, response) => {
     const current = actor(request);
     if (!store.view(sessionHash(request), current.isLocal).self?.isHost) throw new GameError(403, 'Сетевые настройки доступны ведущему.');
-    const address = http.address(); const port = address && typeof address !== 'string' ? address.port : options.port ?? 4321;
+    const address = http.address(); const port = address && typeof address !== 'string' ? address.port : options.port ?? DEFAULT_PORT;
     response.json({ localUrls: localUrls(port), publicUrl: options.publicUrl || null, port });
   });
   app.get('/api/invite', (request, response) => {

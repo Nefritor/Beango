@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
 import { once } from 'node:events';
-import { copyFile, mkdtemp, rm } from 'node:fs/promises';
+import { copyFile, mkdtemp, rm, writeFile, readFile } from 'node:fs/promises';
 import { createServer } from 'node:net';
 import { basename, dirname, join, resolve } from 'node:path';
 import { tmpdir } from 'node:os';
@@ -13,15 +13,17 @@ const executable = join(directory, 'Beango.exe');
 await copyFile(original, executable);
 const reservation = createServer().listen(0, '127.0.0.1');
 await once(reservation, 'listening');
-const port = reservation.address().port;
+let port = reservation.address().port;
 await new Promise((done) => reservation.close(done));
-const url = `http://127.0.0.1:${port}`;
+let url = `http://127.0.0.1:${port}`;
+const configuration = () => `HOST=127.0.0.1\nexport PORT = "${port}" # configured port\nDATA_DIR=./data\nPUBLIC_URL=http://203.0.113.10:54321\n`;
+await writeFile(join(directory, '.env'), Buffer.concat([Buffer.from([255, 254]), Buffer.from(configuration(), 'utf16le')]));
 let processHandle, socket;
 let output = '';
 async function start() {
   processHandle = spawn(executable, ['--no-open'], { windowsHide: true, cwd: tmpdir(), env: {
-    ...process.env, PORT: String(port), HOST: '127.0.0.1', DATA_DIR: join(directory, 'data'),
-    PUBLIC_URL: 'http://203.0.113.10:4321', PATH: join(process.env.SystemRoot, 'System32'), NODE_OPTIONS: '',
+    ...process.env, PORT: '1', HOST: '127.0.0.1', DATA_DIR: join(directory, 'inherited-data'),
+    PUBLIC_URL: 'http://198.51.100.20:1', PATH: join(process.env.SystemRoot, 'System32'), NODE_OPTIONS: '',
   } });
   processHandle.stdout.on('data', (data) => { output += data; });
   processHandle.stderr.on('data', (data) => { output += data; });
@@ -54,7 +56,7 @@ try {
   };
   socket = new WebSocket(url.replace('http:', 'ws:') + '/ws', { headers: { Cookie: cookie, Origin: url } });
   await once(socket, 'open');
-  assert.equal((await (await fetch(`${url}/api/invite`, { headers: { Cookie: cookie } })).json()).publicUrl, 'http://203.0.113.10:4321');
+  assert.equal((await (await fetch(`${url}/api/invite`, { headers: { Cookie: cookie } })).json()).publicUrl, 'http://203.0.113.10:54321');
   await act({ type: 'dictionary', entries: ['Один', 'Два', 'Три', 'Четыре'], superEntry: 'Пять', ready: true });
   for (let i = 0; i < 20 && !(await getState()).room.canStart; i++) await new Promise((done) => setTimeout(done, 50));
   await act({ type: 'start' });
@@ -63,10 +65,18 @@ try {
   const unmarked = await act({ type: 'mark', playerId: state.self.id, entryId: 'super', marked: false });
   assert.equal(unmarked.room.players[0].score, 0);
   await act({ type: 'finish' });
-  await stop(); await start();
+  await stop();
+  assert.equal(JSON.parse(await readFile(join(directory, 'data/room.json'), 'utf8')).phase, 'finished');
+  const nextReservation = createServer().listen(0, '127.0.0.1');
+  await once(nextReservation, 'listening');
+  port = nextReservation.address().port;
+  await new Promise((done) => nextReservation.close(done));
+  url = `http://127.0.0.1:${port}`;
+  await writeFile(join(directory, '.env'), '\ufeff' + configuration(), 'utf8');
+  await start();
   const restored = await getState();
   assert.equal(restored.room.phase, 'finished'); assert.equal(restored.self.id, state.self.id);
-  console.log('EXE OK: isolated folder, no Node.js in PATH, embedded assets, invite URL, solo, score, uncheck, restart persistence.');
+  console.log('EXE OK: .env port overrides inherited PORT; UTF-16 and UTF-8 BOM, changed port after restart, isolated folder, no Node.js in PATH, embedded assets, solo, uncheck, persistence.');
 } finally {
   await stop();
   assert.equal(dirname(resolve(directory)), resolve(tmpdir()));

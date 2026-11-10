@@ -1,0 +1,105 @@
+{
+  "tool": "built-in image_gen",
+  "selected_style": "Стикер пати",
+  "concept_page": "https://chatgpt.com/space/page_7e9d482315f08191a794b30541f4e32a",
+  "concepts": [
+    {
+      "id": "01-confetti",
+      "name": "Конфетти",
+      "path": "concepts/01-confetti.png"
+    },
+    {
+      "id": "02-arcade",
+      "name": "Неоновая аркада",
+      "path": "concepts/02-arcade.png"
+    },
+    {
+      "id": "03-show",
+      "name": "Вечернее шоу",
+      "path": "concepts/03-show.png"
+    },
+    {
+      "id": "04-boardgame",
+      "name": "Клуб настолок",
+      "path": "concepts/04-boardgame.png"
+    },
+    {
+      "id": "05-sticker",
+      "name": "Стикер пати",
+      "path": "concepts/05-sticker.png"
+    }
+  ],
+  "avatar_grid": {
+    "desktop": "4x3",
+    "mobile": "3x4",
+    "planned_count": 12,
+    "generated_count": 12,
+    "pending_slot": null
+  },
+  "avatars": [
+    {
+      "id": "01-cat",
+      "name": "Кот",
+      "path": "concepts/avatars/01-cat.png"
+    },
+    {
+      "id": "02-corgi",
+      "name": "Корги",
+      "path": "concepts/avatars/02-corgi.png"
+    },
+    {
+      "id": "03-fox",
+      "name": "Лиса",
+      "path": "concepts/avatars/03-fox.png"
+    },
+    {
+      "id": "04-frog",
+      "name": "Лягушка",
+      "path": "concepts/avatars/04-frog.png"
+    },
+    {
+      "id": "05-panda",
+      "name": "Панда",
+      "path": "concepts/avatars/05-panda.png"
+    },
+    {
+      "id": "06-robot",
+      "name": "Робот",
+      "path": "concepts/avatars/06-robot.png"
+    },
+    {
+      "id": "07-cap",
+      "name": "Кепка",
+      "path": "concepts/avatars/07-cap.png"
+    },
+    {
+      "id": "08-pink",
+      "name": "Розовые волосы",
+      "path": "concepts/avatars/08-pink.png"
+    },
+    {
+      "id": "09-curls",
+      "name": "Кудри",
+      "path": "concepts/avatars/09-curls.png"
+    },
+    {
+      "id": "10-astronaut",
+      "name": "Космонавт",
+      "path": "concepts/avatars/10-astronaut.png"
+    },
+    {
+      "id": "12-poop-dog",
+      "name": "Пёс с мухами",
+      "path": "concepts/avatars/12-poop-dog.png"
+    },
+    {
+      "id": "11-octopus",
+      "name": "Осьминог в жёлтых очках",
+      "path": "concepts/avatars/11-octopus.png"
+    }
+  ],
+  "note": "Набор из 12 персонажей подготовлен. Последний персонаж — осьминог в жёлтых очках.",
+  "welcome_mockup": "concepts/06-welcome-sticker-v3.png",
+  "welcome_prompt": "concepts/welcome-v3.prompt.txt",
+  "avatar_prompts": "concepts/avatars/image-prompts.json"
+}

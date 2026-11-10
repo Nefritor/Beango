@@ -1,0 +1,21 @@
+node_modules/
+dist/
+data/
+logs/
+.env
+*.tsbuildinfo
+coverage/
+concepts/review/
+release/
+.impeccable/
+concepts/avatars/11-bone-piercing*
+concepts/avatars/11-furry-monster*
+concepts/avatars/11-red-lips*
+concepts/06-welcome-sticker.png
+concepts/06-welcome-sticker-v2.png
+concepts/welcome.prompt.txt
+concepts/welcome-v2.prompt.txt
+concepts/image-prompts.json
+concepts/avatars/image-prompts.json
+Start Bingo.cmd
+/Beango.exe

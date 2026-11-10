@@ -1,0 +1,3 @@
+* text=auto
+*.cmd text eol=crlf
+docs/THIRD_PARTY_NOTICES.txt -whitespace

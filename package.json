@@ -1,0 +1,45 @@
+{
+  "name": "beango",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "scripts": {
+    "dev": "node scripts/dev.mjs",
+    "prepare:assets": "node scripts/prepare-assets.mjs",
+    "typecheck": "tsc --noEmit",
+    "build": "npm run prepare:assets && npm run typecheck && vite build && tsc -p tsconfig.server.json",
+    "start": "node --env-file-if-exists=.env dist/runtime/server/index.js",
+    "test": "tsx --test tests/*.test.ts",
+    "check": "npm run typecheck && npm test",
+    "build:exe": "npm run build && node scripts/build-exe.mjs",
+    "test:exe": "node scripts/smoke-exe.mjs"
+  },
+  "dependencies": {
+    "@fontsource-variable/golos-text": "^5.3.0",
+    "@fontsource-variable/unbounded": "^5.3.0",
+    "canvas-confetti": "^1.9.4",
+    "express": "^5.3.0",
+    "lucide-react": "^1.71.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "ws": "^8.22.2"
+  },
+  "devDependencies": {
+    "@types/canvas-confetti": "^1.9.0",
+    "@types/express": "^5.0.0",
+    "@types/node": "^24.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@types/ws": "^8.18.0",
+    "@vitejs/plugin-react": "^6.3.0",
+    "esbuild": "^0.28.2",
+    "postject": "^1.0.0-alpha.6",
+    "sharp": "^0.35.5",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.7"
+  }
+}

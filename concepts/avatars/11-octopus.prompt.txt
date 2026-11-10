@@ -1,0 +1,5 @@
+Use case: stylized-concept.
+Asset type: one selectable cartoon avatar for the "Стикер пати" Bingo game.
+The supplied robot image is STYLE REFERENCE ONLY: match its chunky cheerful sticker drawing, bold smooth near-black outline #181818, warm-white die-cut keyline #FFFCF2, simple flat colors, clean shapes, subtle contained lower-right sticker shadow and friendly readable expression.
+Create a NEW happy purple cartoon octopus wearing oversized bright lemon-yellow round glasses. A large rounded purple head, friendly eyes visible through the glasses, a small cheerful smile and short rounded curling tentacles gathered beneath the head. Keep the silhouette compact, balanced and easy to recognize at 48px. The glasses are plain, no writing or symbols. No other accessories.
+One centered character on a square approximately 1254x1254 canvas, filling about 75% of the square with consistent transparent safety margins. Genuine TRANSPARENT alpha background. No backing circle or rectangle, no text, no watermark, no extra characters or scenery. Not photorealistic, not 3D, no intricate texture.
